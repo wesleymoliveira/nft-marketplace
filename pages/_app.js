@@ -6,9 +6,12 @@ import '../styles/globals.css';
 
 const MyApp = ({ Component, pageProps }) => (
   <ThemeProvider attribute="class">
-    <Navbar />
     <div className="dark:bg-nft-dark bg-white min-h-screen">
-      <Component {...pageProps} />
+      <Navbar />
+      <div className="pt-65">
+        <Component {...pageProps} />
+
+      </div>
       <Footer />
     </div>
     <Script src="https://kit.fontawesome.com/a31ca613f9.js" crossOrigin="anonymous" />
