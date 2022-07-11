@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import axios from 'axios';
+import { create as ipfsHttpClient } from 'ipfs-http-client';
 
 import { MarketAddress, MarketABI } from './constants';
+
+const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
+
+const fetchContract = (providerOrSigner) => new ethers.Contract(MarketAddress, MarketABI, providerOrSigner);
 
 export const NFTContext = React.createContext();
 export const NFTProvider = ({ children }) => {
@@ -34,12 +39,55 @@ export const NFTProvider = ({ children }) => {
     window.location.reload();
   };
 
+  const uploadToIPFS = async (file) => {
+    try {
+      const added = await client.add({ content: file });
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      return url;
+    } catch (error) {
+      console.log('Error uploading file to IPFS', error);
+    }
+  };
+
+  const createSale = async (fileUrl, formInputPrice, isReselling, id) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    const price = ethers.utils.parseUnits(formInputPrice, 'ether');
+    const contract = fetchContract(signer);
+
+    const listingPrice = await contract.getListingPrice();
+    const transaction = await contract.createToken(fileUrl, price, { value: listingPrice.toString() });
+    await transaction.wait();
+  };
+
+  const createNFT = async (formInput, fileUrl, router) => {
+    const { name, description, price } = formInput;
+
+    if (!name || !description || !price || !fileUrl) {
+      alert('Please fill in all fields');
+    }
+
+    const data = JSON.stringify({ name, description, image: fileUrl });
+
+    try {
+      const added = await client.add(data);
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      await createSale(url, price);
+      router.push('/');
+    } catch (error) {
+      console.log('Error creating NFT', error);
+    }
+  };
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
 
   return (
-    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount }}>
+    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT }}>
       {children}
     </NFTContext.Provider>
   );
