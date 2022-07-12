@@ -82,12 +82,38 @@ export const NFTProvider = ({ children }) => {
     }
   };
 
+  const fetchNFTs = async () => {
+    const provider = new ethers.providers.JsonRpcProvider();
+    const contract = fetchContract(provider);
+
+    const data = await contract.fetchMarketItems();
+
+    const items = await Promise.all(data.map(async (item) => {
+      const tokenURI = await contract.tokenURI(item.tokenId);
+      const { data: { image, name, description } } = await axios.get(tokenURI);
+      const price = ethers.utils.formatUnits(item.price.toString(), 'ether');
+
+      return {
+        price,
+        tokenId: item.tokenId.toNumber(),
+        seller: item.seller,
+        owner: item.owner,
+        image,
+        name,
+        description,
+        tokenURI: item.tokenURI,
+      };
+    }));
+
+    return items;
+  };
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
 
   return (
-    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT }}>
+    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs }}>
       {children}
     </NFTContext.Provider>
   );
