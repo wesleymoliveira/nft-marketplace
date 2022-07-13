@@ -108,12 +108,41 @@ export const NFTProvider = ({ children }) => {
     return items;
   };
 
+  const fetchListedNfts = async () => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    const contract = fetchContract(signer);
+
+    const data = await contract.fetchItemsListed();
+
+    const items = await Promise.all(data.map(async (item) => {
+      const tokenURI = await contract.tokenURI(item.tokenId);
+      const { data: { image, name, description } } = await axios.get(tokenURI);
+      const price = ethers.utils.formatUnits(item.price.toString(), 'ether');
+
+      return {
+        price,
+        tokenId: item.tokenId.toNumber(),
+        seller: item.seller,
+        owner: item.owner,
+        image,
+        name,
+        description,
+        tokenURI: item.tokenURI,
+      };
+    }));
+    return items;
+  };
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
 
   return (
-    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs }}>
+    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs, fetchListedNfts }}>
       {children}
     </NFTContext.Provider>
   );
