@@ -108,7 +108,7 @@ export const NFTProvider = ({ children }) => {
     return items;
   };
 
-  const fetchListedNfts = async () => {
+  const fetchMyNftsOrListedNfts = async (type) => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
@@ -116,7 +116,7 @@ export const NFTProvider = ({ children }) => {
 
     const contract = fetchContract(signer);
 
-    const data = await contract.fetchItemsListed();
+    const data = type === 'fetchItemsListed' ? await contract.fetchItemsListed() : await contract.fetchMyNFTs();
 
     const items = await Promise.all(data.map(async (item) => {
       const tokenURI = await contract.tokenURI(item.tokenId);
@@ -142,7 +142,7 @@ export const NFTProvider = ({ children }) => {
   }, []);
 
   return (
-    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs, fetchListedNfts }}>
+    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs, fetchMyNftsOrListedNfts }}>
       {children}
     </NFTContext.Provider>
   );
