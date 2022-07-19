@@ -28,13 +28,6 @@ const MyNFTs = () => {
     );
   }
 
-  if (!isLoading && nfts.length === 0) {
-    return (
-      <div className="flexCenter sm:p-4 p-16 min-h-screen">
-        <h1 className="font-poppins dark:text-white text-nft-black-1 text-3xl font-extrabold">You don't have NFts yet.</h1>
-      </div>
-    );
-  }
   return (
     <div className="w-full flex justify-start items-center flex-col min-h-screen">
       <div className="w-full flexCenter flex-col">
