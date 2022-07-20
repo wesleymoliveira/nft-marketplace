@@ -101,7 +101,7 @@ export const NFTProvider = ({ children }) => {
         image,
         name,
         description,
-        tokenURI: item.tokenURI,
+        tokenURI,
       };
     }));
 
@@ -131,7 +131,7 @@ export const NFTProvider = ({ children }) => {
         image,
         name,
         description,
-        tokenURI: item.tokenURI,
+        tokenURI,
       };
     }));
     return items;
