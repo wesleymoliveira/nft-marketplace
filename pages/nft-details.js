@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import { NFTContext } from '../context/NFTContext';
-import { Loader, NFTCard, Button } from '../components';
+import { Loader, Button, Modal, PaymentBodyCmp } from '../components';
 import images from '../assets';
 import { shortenAddress } from '../utils/shortenAddress';
 
@@ -11,7 +11,9 @@ const NFTDetails = () => {
   const router = useRouter();
   const [nft, setNft] = useState({ image: images.nft1, tokenId: '', name: '', description: '', price: '', owner: '', seller: '' });
   const [isLoading, setIsLoading] = useState(true);
-  const { currentAccount, nftCurrency } = useContext(NFTContext);
+  const [paymentModal, setPaymentModal] = useState(false);
+
+  const { nftCurrency, currentAccount } = useContext(NFTContext);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -74,11 +76,35 @@ const NFTDetails = () => {
                   btnName={`Buy for ${nft.price} ${nftCurrency}`}
                   btnType="primary"
                   classStyles="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
-                  handleClick={() => {}}
+                  handleClick={() => setPaymentModal(true)}
                 />
               )}
         </div>
       </div>
+      {paymentModal && (
+        <Modal
+          header="Check Out"
+          body={<PaymentBodyCmp nft={nft} nftCurrency={nftCurrency} />}
+          footer={(
+            <div className="flex flex-row sm:flex-col">
+              <Button
+                btnName="Checkout"
+                btnType="primary"
+                classStyles="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
+                handleClick={() => {}}
+              />
+              <Button
+                btnName="Cancel"
+                btnType="outline"
+                classStyles="rounded-lg"
+                handleClick={() => setPaymentModal(false)}
+              />
+            </div>
+          )}
+          handleClose={() => setPaymentModal(false)}
+        />
+      )}
+
     </div>
   );
 };
