@@ -9,12 +9,12 @@ import { shortenAddress } from '../utils/shortenAddress';
 
 const NFTDetails = () => {
   const router = useRouter();
-  const [nft, setNft] = useState({ image: images.nft1, tokenId: '', name: '', description: '', price: '', owner: '', seller: '' });
+  const [nft, setNft] = useState({ image: images.nft1, tokenId: '', name: '', description: '', price: '', owner: '', seller: '', tokenURI: '' });
   const [isLoading, setIsLoading] = useState(true);
   const [paymentModal, setPaymentModal] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
 
-  const { nftCurrency, currentAccount, buyNFT, isLoadingNFT } = useContext(NFTContext);
+  const { nftCurrency, currentAccount, buyNFT } = useContext(NFTContext);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -76,7 +76,7 @@ const NFTDetails = () => {
                   btnName="List on Marketplace"
                   btnType="primary"
                   classStyles="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
-                  handleClick={() => {}}
+                  handleClick={() => router.push(`/resell-nft?tokenID=${nft.tokenId}&tokenURI=${nft.tokenURI}`)}
                 />
               )
               : (
