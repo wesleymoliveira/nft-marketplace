@@ -5,8 +5,9 @@ import { useTheme } from 'next-themes';
 import { Banner, CreatorCard, NFTCard } from '../components';
 
 import images from '../assets';
-import { makeFakeId } from '../utils/makeFakeId';
 import { NFTContext } from '../context/NFTContext';
+import { getTopCreators } from '../utils/getToCreators';
+import { shortenAddress } from '../utils/shortenAddress';
 
 const Home = () => {
   const parentRef = useRef(null);
@@ -55,6 +56,8 @@ const Home = () => {
     };
   });
 
+  const topCreators = getTopCreators(nfts);
+
   return (
 
     <div className="flex justify-center sm:px-4 p-12">
@@ -64,13 +67,13 @@ const Home = () => {
           <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold ml-4 xs:ml-0">Top Sellers</h1>
           <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>
             <div className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none" ref={scrollRef}>
-              {[6, 7, 8, 9, 10].map((i) => (
+              {topCreators.map((creator, i) => (
                 <CreatorCard
-                  key={`creator-${i}`}
-                  rank={i}
-                  creatorImage={images[`creator${i}`]}
-                  creatorAddress={`0x${makeFakeId(3)}...${makeFakeId(4)}`}
-                  creatorEths={10 - i * 0.5}
+                  key={creator.seller}
+                  rank={i + 1}
+                  creatorImage={images[`creator${i + 1}`]}
+                  creatorAddress={shortenAddress(creator.seller)}
+                  creatorEths={creator.sum}
                 />
               ))}
               {!hideButtons && (

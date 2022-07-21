@@ -29,10 +29,6 @@ const CreateNFTs = () => {
     ${isDragReject && ' border-file-reject'}`
 
   ), [isDragActive, isDragAccept, isDragReject]);
-  console.log(
-    'FORMINPUT',
-    formInput,
-  );
 
   return (
     <div className="flex justify-center sm:px-4 p-12">
