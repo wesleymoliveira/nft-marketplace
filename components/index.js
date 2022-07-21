@@ -8,5 +8,6 @@ import Input from './Input';
 import Loader from './Loader';
 import Modal from './Modal';
 import PaymentBodyCmp from './PaymentBodyCmp';
+import SearchBar from './SearchBar';
 
-export { Navbar, Footer, Button, Banner, CreatorCard, NFTCard, Input, Loader, Modal, PaymentBodyCmp };
+export { Navbar, Footer, Button, Banner, CreatorCard, NFTCard, Input, Loader, Modal, PaymentBodyCmp, SearchBar };
