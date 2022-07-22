@@ -23,6 +23,15 @@ const MyNFTs = () => {
     });
   }, []);
 
+  if (!currentAccount) {
+    return (
+      <Empty
+        title="MetaMask is not connected"
+        subtitle="Please connect your wallet to see your listed NFTs"
+      />
+    );
+  }
+
   useEffect(() => {
     const sortedNfts = [...nfts];
 

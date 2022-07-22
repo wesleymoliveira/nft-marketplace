@@ -5,7 +5,7 @@ import { Empty, Loader, NFTCard } from '../components';
 const ListedNFTs = () => {
   const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { fetchMyNftsOrListedNfts } = useContext(NFTContext);
+  const { fetchMyNftsOrListedNfts, currentAccount } = useContext(NFTContext);
 
   useEffect(() => {
     setIsLoading(true);
@@ -14,6 +14,15 @@ const ListedNFTs = () => {
       setIsLoading(false);
     });
   }, []);
+
+  if (!currentAccount) {
+    return (
+      <Empty
+        title="MetaMask is not connected"
+        subtitle="Please connect your wallet to see your listed NFTs"
+      />
+    );
+  }
 
   if (isLoading) {
     return (
