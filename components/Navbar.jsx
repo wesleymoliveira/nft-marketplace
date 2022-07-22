@@ -1,4 +1,4 @@
-import { React, useState, useContext } from 'react';
+import { React, useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
@@ -51,11 +51,25 @@ export const ButtonGroup = ({ setActive, router }) => {
   ) : <Button handleClick={connectWallet} btnName="Connect" classStyles="mx-2 rounded-xl" />;
 };
 
+const checkActive = (router, setActive, active) => {
+  if (active !== 'Explore NFTs' && router.pathname === '/') {
+    setActive('Explore NFTs');
+  } else if (active !== 'My Listed NFTs' && router.pathname === '/listed-nfts') {
+    setActive('My Listed NFTs');
+  } else if (active !== 'My NFTs' && router.pathname === '/my-nfts') {
+    setActive('My NFTs');
+  }
+};
+
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const [active, setActive] = useState('Explore NFTs');
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
+
+  useEffect(() => {
+    checkActive(router, setActive, active);
+  }, [router.pathname, setActive, active]);
 
   return (
     <nav className="flexBetween w-full fixed z-10 p-4 flex-row border-b dark:bg-nft-dark bg-white dark:border-nft-black-1 border-nft-gray-1">
