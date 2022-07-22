@@ -55,7 +55,7 @@ const Footer = () => {
 
             {[images.instagram, images.twitter, images.telegram, images.discord].map((image, index) => (
               <div key={index} className="mx-2 cursor-pointer">
-                <Image src={image} width={24} height={24} objectFit="contain" alt="social" className={theme === 'light' && 'filter invert'} />
+                <Image src={image} width={24} height={24} objectFit="contain" alt="social" className={theme === 'light' ? 'filter invert' : ''} />
               </div>
             ))}
           </div>

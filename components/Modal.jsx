@@ -18,7 +18,7 @@ const Modal = ({ header, body, footer, handleClose }) => {
       <div ref={modalRef} className="w-2/5 md:w-11/12 minlg:w-2/4 dark:bg-nft-dark bg-white flex flex-col rounded-lg">
         <div className="flex justify-end mt-4 mr-4 minglg:mt-6 minglg:mr-6">
           <div className="w-3 h-3 relative minlg:w-6 minlg:h-6 cursor-pointer" onClick={handleClose}>
-            <Image src={images.cross} objectFit="cover" layout="fill" className={theme === 'light' && 'filter invert'} />
+            <Image src={images.cross} objectFit="cover" layout="fill" className={theme === 'light' ? 'filter invert' : ''} />
           </div>
         </div>
         <div className="flexCenter w-full text-center p-4">
