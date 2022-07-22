@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useContext } from 'react';
+import { React, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
@@ -24,7 +24,7 @@ const MenuItems = ({ isMobile, active, setActive }) => {
 
   return (
     <ul className={`list-none flexCenter flex-row ${isMobile && 'flex-col h-full'}`}>
-      {['Explore NFTs', 'Listed NFTs', 'My NFTs'].map((item, i) => (
+      {['Explore NFTs', 'My Listed NFTs', 'My NFTs'].map((item, i) => (
         <li
           key={i}
           onClick={() => {
