@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
-import { Banner, CreatorCard, NFTCard, SearchBar } from '../components';
+import { Banner, CreatorCard, Empty, NFTCard, SearchBar } from '../components';
 
 import images from '../assets';
 import { NFTContext } from '../context/NFTContext';
@@ -102,56 +102,63 @@ const Home = () => {
       <div className="w-full minmd:w-4/5">
         <Banner parentStyles="justify-start mb-6 h-72 sm:h-60 p-12 xs:p-4 xs:h-44 rounded-3xl" childStyles="md:text-4xl sm: text-2xl xs:text-x1 text-left" name="Discover, collect, and sell extraordinary NFTs" />
         <div>
-          <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold ml-4 xs:ml-0">Top Sellers</h1>
-          <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>
-            <div className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none" ref={scrollRef}>
-              {topCreators.map((creator, i) => (
-                <CreatorCard
-                  key={creator.seller}
-                  rank={i + 1}
-                  creatorImage={images[`creator${i + 1}`]}
-                  creatorAddress={shortenAddress(creator.seller)}
-                  creatorEths={creator.sum}
-                />
-              ))}
-              {!hideButtons && (
-                <>
-                  <div className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0" onClick={() => handleScroll('left')}>
-                    <Image src={images.left} layout="fill" objectFit="contain" alt="left_arrow" className={theme === 'light' && 'filter invert'} />
-                  </div>
-                  <div className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer right-0" onClick={() => handleScroll('right')}>
-                    <Image src={images.right} layout="fill" objectFit="contain" alt="right_arrow" className={theme === 'light' && 'filter invert'} />
-                  </div>
-                </>
+          { nftsCopy.length ? (
+            <>
+              <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold ml-4 xs:ml-0">Top Sellers</h1>
+              <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>
+                <div className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none" ref={scrollRef}>
+                  {topCreators.map((creator, i) => (
+                    <CreatorCard
+                      key={creator.seller}
+                      rank={i + 1}
+                      creatorImage={images[`creator${i + 1}`]}
+                      creatorAddress={shortenAddress(creator.seller)}
+                      creatorEths={creator.sum}
+                    />
+                  ))}
+                  {!hideButtons && (
+                  <>
+                    <div className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0" onClick={() => handleScroll('left')}>
+                      <Image src={images.left} layout="fill" objectFit="contain" alt="left_arrow" className={theme === 'light' && 'filter invert'} />
+                    </div>
+                    <div className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer right-0" onClick={() => handleScroll('right')}>
+                      <Image src={images.right} layout="fill" objectFit="contain" alt="right_arrow" className={theme === 'light' && 'filter invert'} />
+                    </div>
+                  </>
+                  )}
+                </div>
+              </div>
+              <div className="flexBetween mt-12 mx-4 xs:mx-0 minlg:mx-8 sm:flex-col sm:items-start">
+                <h1 className="flex-1 font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold sm:mb-4">Hot Bids</h1>
+                <div className="flex-1 w-full flex flex-row sm:flex-col px-4 xs:px-0 minlg:p-8">
+                  <SearchBar
+                    activeSelect={activeSelect}
+                    setActiveSelect={setActiveSelect}
+                    handleSearch={onHandleSearch}
+                    clearSearch={onClearSearch}
+                  />
+                </div>
+              </div>
+              {nfts.length > 0 && (
+              <div className="mt-10">
+                <div className="mt-3 w-full flex flex-wrap justify-start md:justify-center">
+                  {nfts.map((nft) => (
+
+                    <NFTCard
+                      key={`nft-${nft.tokenId}`}
+                      nft={nft}
+                    />
+                  ))}
+
+                </div>
+              </div>
               )}
-            </div>
-          </div>
-        </div>
-        <div className="flexBetween mt-12 mx-4 xs:mx-0 minlg:mx-8 sm:flex-col sm:items-start">
-          <h1 className="flex-1 font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold sm:mb-4">Hot Bids</h1>
-          <div className="flex-1 w-full flex flex-row sm:flex-col px-4 xs:px-0 minlg:p-8">
-            <SearchBar
-              activeSelect={activeSelect}
-              setActiveSelect={setActiveSelect}
-              handleSearch={onHandleSearch}
-              clearSearch={onClearSearch}
-            />
-          </div>
-        </div>
-        {nfts.length > 0 && (
-          <div className="mt-10">
-            <div className="mt-3 w-full flex flex-wrap justify-start md:justify-center">
-              {nfts.map((nft) => (
+            </>
 
-                <NFTCard
-                  key={`nft-${nft.tokenId}`}
-                  nft={nft}
-                />
-              ))}
-
-            </div>
-          </div>
-        )}
+          ) : (
+            <Empty title="Nothing found" subtitle="We don't have any NFTs listed yet." />
+          )}
+        </div>
       </div>
     </div>
 

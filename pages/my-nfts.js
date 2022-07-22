@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 
 import { NFTContext } from '../context/NFTContext';
-import { Loader, NFTCard, Banner, SearchBar } from '../components';
+import { Loader, NFTCard, Banner, SearchBar, Empty } from '../components';
 import images from '../assets';
 import { shortenAddress } from '../utils/shortenAddress';
 
@@ -82,28 +82,29 @@ const MyNFTs = () => {
         </div>
 
       </div>
-      <div className="sm:px-4 pt-12 px-12 w-full minmd:w-4/5 flexCenter ">
-        <div className="flex-1 w-full flex flex-row sm:flex-col px-4 xs:px-0 minlg:p-8">
-          <SearchBar
-            activeSelect={activeSelect}
-            setActiveSelect={setActiveSelect}
-            handleSearch={onHandleSearch}
-            clearSearch={onClearSearch}
-          />
-        </div>
-      </div>
-      { !isLoading && !nfts.length ? (
-        <div className="flexCenter sm:p-4 p-16">
-          <h1 className="font-poppins dark:text-white text-nft-black-1 font-extrabold text-3xl">No NFts found</h1>
-        </div>
+
+      { !isLoading && !nftsCopy.length ? (
+        <Empty title="Your wallet is empty :(" subtitle="Find hot bids on the marketplace" />
       ) : (
-        <div className="sm:px-4 pb-12 px-12 w-full minmd:w-4/5 flexCenter flex-col">
-          <div className="mt-3 w-full flex flex-wrap">
-            {nfts.map((nft) => (
-              <NFTCard key={nft.tokenId} nft={nft} onProfilePage />
-            ))}
+        <>
+          <div className="sm:px-4 pt-12 px-12 w-full minmd:w-4/5 flexCenter ">
+            <div className="flex-1 w-full flex flex-row sm:flex-col px-4 xs:px-0 minlg:p-8">
+              <SearchBar
+                activeSelect={activeSelect}
+                setActiveSelect={setActiveSelect}
+                handleSearch={onHandleSearch}
+                clearSearch={onClearSearch}
+              />
+            </div>
           </div>
-        </div>
+          <div className="sm:px-4 pb-12 px-12 w-full minmd:w-4/5 flexCenter flex-col">
+            <div className="mt-3 w-full flex flex-wrap">
+              {nfts.map((nft) => (
+                <NFTCard key={nft.tokenId} nft={nft} onProfilePage />
+              ))}
+            </div>
+          </div>
+        </>
       ) }
     </div>
   );

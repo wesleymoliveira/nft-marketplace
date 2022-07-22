@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { NFTContext } from '../context/NFTContext';
-import { Loader, NFTCard } from '../components';
+import { Empty, Loader, NFTCard } from '../components';
 
 const ListedNFTs = () => {
   const [nfts, setNfts] = useState([]);
@@ -25,9 +25,7 @@ const ListedNFTs = () => {
 
   if (!isLoading && nfts.length === 0) {
     return (
-      <div className="flexCenter sm:p-4 p-16 min-h-screen">
-        <h1 className="font-poppins dark:text-white text-nft-black-1 text-3xl font-extrabold">No NFTs listed for sale.</h1>
-      </div>
+      <Empty title={'You don\'t have NFTs listed for sale.'} />
     );
   }
 
@@ -36,7 +34,7 @@ const ListedNFTs = () => {
       <div className="w-full minmd:w-4/5">
         <div className="mt-4">
           <h2 className="font-poppins mt-2 ml-4 sm:ml-2 dark:text-white text-nft-black-1 text-2xl font-semibold">
-            NFTs listed for sale
+            My NFTs listed for sale
           </h2>
           <div className="mt-3 w-full flex flex-wrap justify-start md:justify-center">
             {nfts.map((nft) => <NFTCard key={nft.tokenId} nft={nft} />)}
