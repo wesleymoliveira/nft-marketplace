@@ -14,7 +14,7 @@ const NFTDetails = () => {
   const [paymentModal, setPaymentModal] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
 
-  const { nftCurrency, currentAccount, buyNFT } = useContext(NFTContext);
+  const { nftCurrency, currentAccount, buyNFT, isLoading: contextLoading } = useContext(NFTContext);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -93,7 +93,7 @@ const NFTDetails = () => {
         <Modal
           header="Check Out"
           body={<PaymentBodyCmp nft={nft} nftCurrency={nftCurrency} />}
-          footer={(
+          footer={contextLoading ? (<Loader />) : (
             <div className="flex flex-row sm:flex-col">
               <Button
                 btnName="Checkout"

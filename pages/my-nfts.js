@@ -9,17 +9,14 @@ import { shortenAddress } from '../utils/shortenAddress';
 const MyNFTs = () => {
   const [nfts, setNfts] = useState([{ image: images.nft1, tokenId: '', name: '', description: '', price: '', owner: '', seller: '', tokenURI: '' }]);
   const [nftsCopy, setNftsCopy] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [activeSelect, setActiveSelect] = useState('Recently Added');
 
-  const { fetchMyNftsOrListedNfts, currentAccount } = useContext(NFTContext);
+  const { fetchMyNftsOrListedNfts, currentAccount, isLoading } = useContext(NFTContext);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchMyNftsOrListedNfts('fetchMyNFTs').then((items) => {
       setNfts(items);
       setNftsCopy(items);
-      setIsLoading(false);
     });
   }, []);
 

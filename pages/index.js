@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
-import { Banner, CreatorCard, Empty, NFTCard, SearchBar } from '../components';
+import { Banner, CreatorCard, Empty, Loader, NFTCard, SearchBar } from '../components';
 
 import images from '../assets';
 import { NFTContext } from '../context/NFTContext';
@@ -13,7 +13,7 @@ const Home = () => {
   const parentRef = useRef(null);
   const scrollRef = useRef(null);
   const [hideButtons, setHideButtons] = useState(false);
-  const { fetchNFTs } = useContext(NFTContext);
+  const { fetchNFTs, isLoading } = useContext(NFTContext);
   const [nfts, setNfts] = useState([]);
   const [nftsCopy, setNftsCopy] = useState([]);
   const [activeSelect, setActiveSelect] = useState('Recently Added');
@@ -96,8 +96,15 @@ const Home = () => {
     }
   };
 
-  return (
+  if (isLoading) {
+    return (
+      <div className="flexStart min-h-screen">
+        <Loader />
+      </div>
+    );
+  }
 
+  return (
     <div className="flex justify-center sm:px-4 p-12">
       <div className="w-full minmd:w-4/5">
         <Banner parentStyles="justify-start mb-6 h-72 sm:h-60 p-12 xs:p-4 xs:h-44 rounded-3xl" childStyles="md:text-4xl sm: text-2xl xs:text-x1 text-left" name="Discover, collect, and sell extraordinary NFTs" />

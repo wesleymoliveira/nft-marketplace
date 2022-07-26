@@ -6,10 +6,10 @@ import { NFTContext } from '../context/NFTContext';
 import { Button, Input, Loader } from '../components';
 
 const ResellNFT = () => {
-  const { createSale } = useContext(NFTContext);
+  const { createSale, isLoading } = useContext(NFTContext);
   const [price, setPrice] = useState('');
   const [image, setImage] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+
   const router = useRouter();
   const { tokenID, tokenURI } = router.query;
 
@@ -20,7 +20,6 @@ const ResellNFT = () => {
 
     setPrice(data.price);
     setImage(data.image);
-    setIsLoading(false);
   };
 
   useEffect(() => {

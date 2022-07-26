@@ -50,7 +50,7 @@ export const ButtonGroup = ({ setActive, router, setIsOpen }) => {
   const { connectWallet, currentAccount } = useContext(NFTContext);
 
   return currentAccount ? (
-    <div><Button handleClick={() => { setActive(''); router.push('/create-nft'); setIsOpen(false); }} btnName="Create an NFT" classStyles="mx-2 rounded-xl" /></div>
+    <div><Button handleClick={() => { setIsOpen(false); setActive(''); router.push('/create-nft'); }} btnName="Create an NFT" classStyles="mx-2 rounded-xl" /></div>
   ) : <Button handleClick={connectWallet} btnName="Connect" classStyles="mx-2 rounded-xl" />;
 };
 
@@ -108,7 +108,7 @@ const Navbar = () => {
           <ul className="list-none flexCenter flex-row">
             <MenuItems active={active} setActive={setActive} />
             <div className="ml-4">
-              <ButtonGroup setActive={setActive} router={router} />
+              <ButtonGroup setActive={setActive} router={router} setIsOpen={setIsOpen} />
             </div>
           </ul>
         </div>

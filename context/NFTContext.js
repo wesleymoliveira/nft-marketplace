@@ -13,6 +13,7 @@ const fetchContract = (providerOrSigner) => new ethers.Contract(MarketAddress, M
 export const NFTContext = React.createContext();
 export const NFTProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const nftCurrency = 'ETH';
 
   const checkIfWalletIsConnected = async () => {
@@ -41,8 +42,10 @@ export const NFTProvider = ({ children }) => {
 
   const uploadToIPFS = async (file) => {
     try {
+      setIsLoading(true);
       const added = await client.add({ content: file });
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      setIsLoading(false);
       return url;
     } catch (error) {
       console.log('Error uploading file to IPFS', error);
@@ -64,7 +67,9 @@ export const NFTProvider = ({ children }) => {
       ? await contract.createToken(fileUrl, price, { value: listingPrice.toString() })
       : await contract.resellToken(id, price, { value: listingPrice.toString() });
 
+    setIsLoading(true);
     await transaction.wait();
+    setIsLoading(false);
   };
 
   const createNFT = async (formInput, fileUrl, router) => {
@@ -92,11 +97,13 @@ export const NFTProvider = ({ children }) => {
 
     const data = await contract.fetchMarketItems();
 
+    setIsLoading(true);
     const items = await Promise.all(data.map(async (item) => {
       const tokenURI = await contract.tokenURI(item.tokenId);
       const { data: { image, name, description } } = await axios.get(tokenURI);
       const price = ethers.utils.formatUnits(item.price.toString(), 'ether');
 
+      setIsLoading(false);
       return {
         price,
         tokenId: item.tokenId.toNumber(),
@@ -117,6 +124,7 @@ export const NFTProvider = ({ children }) => {
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
+    setIsLoading(true);
 
     const contract = fetchContract(signer);
 
@@ -138,6 +146,7 @@ export const NFTProvider = ({ children }) => {
         tokenURI,
       };
     }));
+    setIsLoading(false);
     return items;
   };
 
@@ -155,11 +164,13 @@ export const NFTProvider = ({ children }) => {
     const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
     const transaction = await contract.createMarketSale(nft.tokenId, { value: price });
 
+    setIsLoading(true);
     await transaction.wait();
+    setIsLoading(false);
   };
 
   return (
-    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs, fetchMyNftsOrListedNfts, buyNFT, createSale }}>
+    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs, fetchMyNftsOrListedNfts, buyNFT, createSale, isLoading }}>
       {children}
     </NFTContext.Provider>
   );
